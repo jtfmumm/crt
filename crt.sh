@@ -1,9 +1,11 @@
 #!/bin/sh
 clear
 
-if [ $2 ]; then
-	FILENAME="$2"
-	SAVE_FILENAME="crt_save_$2"
+touch crt_run_file
+
+if [ $1 ]; then
+	FILENAME="crt.c"
+	SAVE_FILENAME="$1"
 else
 	FILENAME="crt.c"
 	SAVE_FILENAME="crt_save.c"
@@ -11,6 +13,10 @@ fi
 
 echo > "$FILENAME"
 echo '#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\nint main(int argc, char** argv)\n{' >> "$FILENAME"
+
+if [ $1 ]; then
+	load "l"
+fi
 
 load()
 {
@@ -24,11 +30,11 @@ load()
 
 save()
 {
-	if [ "$1" = "s" ] || [ "$1" = "l" ]; then
+	if [ "$1" = "s" ]; then
 		cat "$FILENAME" > "$SAVE_FILENAME"
 		echo '    return 0;' >> "$SAVE_FILENAME"
 		echo '}' >> "$SAVE_FILENAME"
-		load "s"
+		#load "s"
 	fi
 }
 
@@ -59,8 +65,6 @@ clean_up()
 	rm crt.c
 	rm crt_run_file
 }
-
-load "$1"
 
 while :
 do
@@ -98,7 +102,6 @@ do
 		continue
 	fi
 	if [ "$INPUT" = "q" ]; then
-		save "$1"
 		clean_up
 		break
 	fi
@@ -118,7 +121,6 @@ do
 		clear
 		cat -n "$FILENAME"
 		echo
-		save "$1"
 		run
 		echo
 		echo "**Continue...**"

@@ -11,6 +11,9 @@ add these yourself.
 
 At present, any functions must be defined within main(). 
 
+You can specify a filename as a command-line parameter.
+Saving will save to that file.
+
 Commands:
 * d - delete last line<br> 
 * c - clear all <br>
