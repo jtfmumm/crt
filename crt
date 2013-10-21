@@ -36,7 +36,9 @@ run()
 {
 	echo "Running program..."
 	gcc "$FILENAME" -o run_crt
-	./run_crt    
+	./run_crt  
+	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
+	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")  
 	echo
 }
 
@@ -91,6 +93,8 @@ do
 	fi
 	if [ "$INPUT" = "q" ]; then
 		save "$1"
+		echo '    return 0;' >> "$FILENAME"
+		echo '}' >> "$FILENAME"
 		break
 	fi
 	if [ "$INPUT" = "d" ]; then
@@ -111,7 +115,10 @@ do
 		echo
 		save "$1"
 		run
-		break
+		echo
+		echo "**Continue...**"
+		read CONTINUE
+
 
 		else
 			echo "    $INPUT" >> "$FILENAME"
