@@ -3,10 +3,10 @@ clear
 
 if [ $2 ]; then
 	FILENAME="$2"
-	SAVE_FILENAME="save_$2"
+	SAVE_FILENAME="crt_save_$2"
 else
 	FILENAME="crt.c"
-	SAVE_FILENAME="save_crt.c"
+	SAVE_FILENAME="crt_save.c"
 fi
 
 echo > "$FILENAME"
@@ -35,8 +35,8 @@ save()
 run()
 {
 	echo "Running program..."
-	gcc "$FILENAME" -o run_crt
-	./run_crt  
+	gcc "$FILENAME" -o crt_run_file
+	./crt_run_file  
 	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
 	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")  
 	echo
@@ -52,6 +52,12 @@ print_header()
 	echo
 	cat -n "$FILENAME"
 	echo	
+}
+
+clean_up()
+{
+	rm crt.c
+	rm crt_run_file
 }
 
 load "$1"
@@ -93,8 +99,7 @@ do
 	fi
 	if [ "$INPUT" = "q" ]; then
 		save "$1"
-		echo '    return 0;' >> "$FILENAME"
-		echo '}' >> "$FILENAME"
+		clean_up
 		break
 	fi
 	if [ "$INPUT" = "d" ]; then
