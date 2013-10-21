@@ -1,0 +1,90 @@
+#!/bin/sh
+clear
+
+if [ $2 ]; then
+	FILENAME="$2"
+	SAVE_FILENAME="save_$2"
+else
+	FILENAME="crt.c"
+	SAVE_FILENAME="save_crt.c"
+fi
+
+echo > "$FILENAME"
+echo '#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\nint main(int argc, char** argv)\n{' >> "$FILENAME"
+
+load()
+{
+	if [ "$1" = "l" ]; then
+		cat "$SAVE_FILENAME" > "$FILENAME"
+		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
+		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
+		rm temp_crt.c
+	fi
+}
+
+save()
+{
+	if [ "$1" = "s" ] || [ "$1" = "l" ]; then
+		cat "$FILENAME" > "$SAVE_FILENAME"
+		echo 'return 0;' >> "$SAVE_FILENAME"
+		echo '}' >> "$SAVE_FILENAME"
+		load "s"
+	fi
+}
+
+run()
+{
+	echo "Running program..."
+	gcc "$FILENAME" -o run_crt
+	./run_crt    
+}
+
+load "$1"
+
+while :
+do
+	clear
+	echo "***crt - C in real time***" 
+	echo "**(d to delete last line, c to clear all, r to run, q to quit, s to save, l to load)**"
+	cat "$FILENAME"
+	echo "Next line:"
+	read INPUT
+	if [ "$INPUT" = "s" ]; then
+		save "s"
+		continue
+	fi
+	if [ "$INPUT" = "l" ]; then
+		load "l"
+		continue
+	fi
+	if [ "$INPUT" = "q" ]; then
+		save "$1"
+		break
+	fi
+	if [ "$INPUT" = "d" ]; then
+		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"
+		rm tmp_crt.c
+		continue
+	fi
+	if [ "$INPUT" = "c" ]; then
+		echo > "$FILENAME"
+		echo '#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\nint main(int argc, char** argv)\n{' >> "$FILENAME"
+		continue
+	fi
+	if [ "$INPUT" = "r" ]; then
+		echo 'return 0;' >> "$FILENAME"
+		echo '}' >> "$FILENAME"
+		clear
+		cat "$FILENAME"
+		save "$1"
+		run
+		break
+
+		else
+			echo "$INPUT" >> "$FILENAME"
+			hi
+    fi
+done 
+
+
+
