@@ -1,6 +1,5 @@
 #!/bin/sh
 clear
-
 touch crt_run_file
 
 if [ $1 ]; then
@@ -15,31 +14,28 @@ echo > "$FILENAME"
 echo '#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\nint main(int argc, char** argv)\n{' >> "$FILENAME"
 
 if [ $1 ]; then
-	load "l"
+	load
 fi
 
 load()
 {
-	if [ "$1" = "l" ]; then
-		cat "$SAVE_FILENAME" > "$FILENAME"
-		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
-		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
-		rm temp_crt.c
-	fi
+	#Load up $SAVE_FILENAME
+	cat "$SAVE_FILENAME" > "$FILENAME"
+	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
+	sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"  #Delete last two lines (return and "}")
+	rm temp_crt.c
 }
 
 save()
 {
-	if [ "$1" = "s" ]; then
-		cat "$FILENAME" > "$SAVE_FILENAME"
-		echo '    return 0;' >> "$SAVE_FILENAME"
-		echo '}' >> "$SAVE_FILENAME"
-		#load "s"
-	fi
+	#Save to $SAVE_FILENAME
+	cat "$FILENAME" > "$SAVE_FILENAME"
+	echo '    return 0;' >> "$SAVE_FILENAME"
+	echo '}' >> "$SAVE_FILENAME"
 }
 
 run()
-{
+{	
 	echo "Running program..."
 	gcc "$FILENAME" -o crt_run_file
 	./crt_run_file  
@@ -62,6 +58,7 @@ print_header()
 
 clean_up()
 {
+	#Delete temp files
 	rm crt.c
 	rm crt_run_file
 }
@@ -71,6 +68,8 @@ do
 	print_header
 	echo "Next line:"
 	read INPUT
+
+	#Check for number
 	if [ "$INPUT" -eq "$INPUT" ] 2>/dev/null; then
 		print_header
 		echo "Replace line $INPUT with:"
@@ -88,17 +87,17 @@ do
 		continue
 	fi
 	if [ "$INPUT" = "s" ]; then
-		save "s"
+		save
 		continue
 	fi
 	if [ "$INPUT" = "n" ]; then
 		echo "Save as..."
 		read SAVE_FILENAME
-		save "s"
+		save
 		continue
 	fi
 	if [ "$INPUT" = "l" ]; then
-		load "l"
+		load
 		continue
 	fi
 	if [ "$INPUT" = "q" ]; then
