@@ -50,7 +50,7 @@ print_header()
 	echo "***crt - C in real time***" 
 	echo "[d to delete last line, c to clear all, r to run, q to quit,"
 	echo "s to save, l to load, n to save under new filename," 
-	echo "i to insert line, # to replace line.]"
+	echo "i to insert line, # to replace line, p for quick printf.]"
 	echo
 	cat -n "$FILENAME"
 	echo	
@@ -75,46 +75,37 @@ do
 		echo "Replace line $INPUT with:"
 		read REPLACE_LINE
 		sed -i "$INPUT c\    $REPLACE_LINE" "$FILENAME"
-		continue
-	fi
-	if [ "$INPUT" = "i" ]; then
+	elif [ "$INPUT" = "i" ]; then
 		print_header
 		echo "Where will you insert your line?"
 		read INSERT_LINE
 		echo "Type line to insert:"
 		read REPLACE_LINE
 		sed -i "$INSERT_LINE a\    $REPLACE_LINE" "$FILENAME"
-		continue
-	fi
-	if [ "$INPUT" = "s" ]; then
+	elif [ "$INPUT" = "s" ]; then
 		save
-		continue
-	fi
-	if [ "$INPUT" = "n" ]; then
+	elif [ "$INPUT" = "n" ]; then
 		echo "Save as..."
 		read SAVE_FILENAME
 		save
-		continue
-	fi
-	if [ "$INPUT" = "l" ]; then
+	elif [ "$INPUT" = "l" ]; then
 		load
-		continue
-	fi
-	if [ "$INPUT" = "q" ]; then
+	elif [ "$INPUT" = "q" ]; then
 		clean_up
 		break
-	fi
-	if [ "$INPUT" = "d" ]; then
+	elif [ "$INPUT" = "d" ]; then
 		sed '$d' < "$FILENAME" > tmp_crt.c ; mv tmp_crt.c "$FILENAME"
 		rm tmp_crt.c
-		continue
-	fi
-	if [ "$INPUT" = "c" ]; then
+	elif [ "$INPUT" = "c" ]; then
 		echo > "$FILENAME"
 		echo '#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\nint main(int argc, char** argv)\n{' >> "$FILENAME"
-		continue
-	fi
-	if [ "$INPUT" = "r" ]; then
+	elif [ "$INPUT" = "p" ]; then
+		echo "Print formatting?"
+		read FORMAT 
+		echo "Variable to print?"
+		read PRINT_VARIABLE
+		echo "    printf(\"%$FORMAT\",$PRINT_VARIABLE);" >> "$FILENAME"
+	elif [ "$INPUT" = "r" ]; then
 		echo '    return 0;' >> "$FILENAME"
 		echo '}' >> "$FILENAME"
 		clear
@@ -124,11 +115,9 @@ do
 		echo
 		echo "**Continue...**"
 		read CONTINUE
-
-
-		else
-			echo "    $INPUT" >> "$FILENAME"
-			hi
+	else
+		echo "    $INPUT" >> "$FILENAME"
+		hi
     fi
 done 
 
