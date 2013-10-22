@@ -104,7 +104,7 @@ do
 		read FORMAT 
 		echo "Variable to print?"
 		read PRINT_VARIABLE
-		echo "    printf(\"%$FORMAT\",$PRINT_VARIABLE);" >> "$FILENAME"
+		echo "    printf(\"%$FORMAT  \",$PRINT_VARIABLE);" >> "$FILENAME"
 	elif [ "$INPUT" = "r" ]; then
 		echo '    return 0;' >> "$FILENAME"
 		echo '}' >> "$FILENAME"
