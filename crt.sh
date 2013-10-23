@@ -1,4 +1,9 @@
 #!/bin/sh
+#crt - C in real-time
+#John Mumm 2013
+#jtfmumm@gmail.com
+#
+
 clear
 touch crt_run_file
 

@@ -24,3 +24,4 @@ Commands:
 * n - save under new filename <br>
 * i - insert line <br>
 * line# - replace line <br>
+* p - quick printf (enter format without "%") <br>
